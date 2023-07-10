@@ -11,6 +11,8 @@ from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from flask_gravatar import Gravatar
 from functools import wraps
 from sqlalchemy import Table, Column, Integer, ForeignKey
+from dotenv import load_dotenv, dotenv_values
+load_dotenv()
 
 
 class Anonymous(AnonymousUserMixin):
@@ -21,8 +23,8 @@ class Anonymous(AnonymousUserMixin):
 Base = declarative_base()
 
 import os
-
-SECRET_KEY = "'8BYkEfBA6O6donzWlSihBXox7C0sKR6b'"
+print(os.getenv("SECRET_KEY"))
+SECRET_KEY = os.getenv("SECRET_KEY")
 app = Flask(__name__)
 app.config['SECRET_KEY'] = SECRET_KEY
 ckeditor = CKEditor(app)
@@ -31,7 +33,7 @@ gravatar = Gravatar(app, size=20, rating='g', default='retro', force_default=Fal
                    force_lower=False, use_ssl=False, base_url=None)
 
 ##CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///blog.db')
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 db = SQLAlchemy(app)
 db.init_app(app)
